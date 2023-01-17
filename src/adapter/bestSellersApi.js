@@ -9,6 +9,9 @@ import { baseUrl } from './api';
 // API endpoint constant for best sellers
 export const BEST_SELLERS_ENDPOINT = `${baseUrl}api/v1/products/best-sellers`;
 
+// Request timeout in milliseconds
+const REQUEST_TIMEOUT = 10000;
+
 export const bestSellersApi = {
   /**
    * Get best selling products
@@ -17,12 +20,18 @@ export const bestSellersApi = {
    */
   getBestSellers: async () => {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+      
       const response = await fetch(BEST_SELLERS_ENDPOINT, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: controller.signal,
       });
+      
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
