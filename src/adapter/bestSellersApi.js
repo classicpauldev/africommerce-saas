@@ -42,6 +42,12 @@ export const bestSellersApi = {
       }
 
       const data = await response.json();
+      
+      // Validate response structure
+      if (!data || (typeof data !== 'object')) {
+        throw new Error('Invalid response format from best sellers API');
+      }
+      
       return data;
     } catch (error) {
       // Re-throw with more context if it's not already an Error
