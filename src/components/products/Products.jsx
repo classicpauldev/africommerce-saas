@@ -190,7 +190,9 @@ const Products = ({ title, endPoint}) => {
             return <Product product={values} key={values.id || values._id} />;
           })
         ) : (
-          <div style={{ padding: '20px', textAlign: 'center' }}>No Product Found</div>
+          <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+            No products available at the moment
+          </div>
         )}
         <StyledArrowContainerRight onClick={slideRight}>
           <MdKeyboardArrowRight />
