@@ -5,7 +5,9 @@ import { baseUrl } from './api';
  * Handles API calls for best selling products
  * Endpoint: /api/v1/products/best-sellers
  */
-const BEST_SELLERS_ENDPOINT = `${baseUrl}api/v1/products/best-sellers`;
+
+// API endpoint constant for best sellers
+export const BEST_SELLERS_ENDPOINT = `${baseUrl}api/v1/products/best-sellers`;
 
 export const bestSellersApi = {
   /**
