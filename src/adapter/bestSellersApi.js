@@ -18,7 +18,7 @@ export const bestSellersApi = {
    * @returns {Promise<Array>} Array of best selling products
    * @throws {Error} If the API request fails
    */
-  getBestSellers: async () => {
+  getBestSellers: async (retries = 2) => {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
@@ -50,6 +50,12 @@ export const bestSellersApi = {
       
       return data;
     } catch (error) {
+      // Retry logic for network errors
+      if (retries > 0 && (error.name === 'AbortError' || error.message.includes('Network'))) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return bestSellersApi.getBestSellers(retries - 1);
+      }
+      
       // Re-throw with more context if it's not already an Error
       if (error instanceof Error) {
         throw error;
