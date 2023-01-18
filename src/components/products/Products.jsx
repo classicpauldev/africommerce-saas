@@ -175,8 +175,18 @@ const Products = ({ title, endPoint}) => {
         </span>
         <button>View More</button>
       </Head>
-      <div ref={sliderRef} style={{ display: 'flex', overflowX: 'auto', gap: '10px', scrollBehavior: 'smooth' }}>
-        <StyledArrowContainerLeft onClick={slideLeft}>
+      <div 
+        ref={sliderRef} 
+        style={{ display: 'flex', overflowX: 'auto', gap: '10px', scrollBehavior: 'smooth' }}
+        role="region"
+        aria-label={`${title} products carousel`}
+      >
+        <StyledArrowContainerLeft 
+          onClick={slideLeft}
+          aria-label="Scroll products left"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && slideLeft()}
+        >
           <MdKeyboardArrowLeft />
         </StyledArrowContainerLeft>
         {loading ? (
@@ -194,7 +204,12 @@ const Products = ({ title, endPoint}) => {
             No products available at the moment
           </div>
         )}
-        <StyledArrowContainerRight onClick={slideRight}>
+        <StyledArrowContainerRight 
+          onClick={slideRight}
+          aria-label="Scroll products right"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && slideRight()}
+        >
           <MdKeyboardArrowRight />
         </StyledArrowContainerRight>
       </div>
