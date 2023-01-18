@@ -4,6 +4,17 @@ import { baseUrl } from './api';
  * Best Sellers API Adapter
  * Handles API calls for best selling products
  * Endpoint: /api/v1/products/best-sellers
+ * 
+ * @typedef {Object} BestSellerProduct
+ * @property {string|number} id - Product identifier
+ * @property {string} name - Product name
+ * @property {number} price - Product price
+ * @property {string} image - Product image URL
+ * @property {number} [rating] - Product rating
+ * 
+ * @typedef {Object} BestSellersResponse
+ * @property {BestSellerProduct[]} data - Array of best selling products
+ * @property {number} [total] - Total number of products
  */
 
 // API endpoint constant for best sellers
@@ -15,8 +26,12 @@ const REQUEST_TIMEOUT = 10000;
 export const bestSellersApi = {
   /**
    * Get best selling products
-   * @returns {Promise<Array>} Array of best selling products
-   * @throws {Error} If the API request fails
+   * @param {number} [retries=2] - Number of retry attempts for failed requests
+   * @returns {Promise<BestSellersResponse|BestSellerProduct[]>} Best selling products data
+   * @throws {Error} If the API request fails after all retries
+   * @example
+   * const products = await bestSellersApi.getBestSellers();
+   * console.log(products);
    */
   getBestSellers: async (retries = 2) => {
     try {
