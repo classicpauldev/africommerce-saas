@@ -4,6 +4,7 @@ import axios from 'axios';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import Product from './Product';
 import Spinner from '../spinner/spinner';
+import { baseUrl } from '../../adapter/api';
 
 // styles
 const Head = styled.div`
