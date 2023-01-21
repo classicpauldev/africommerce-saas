@@ -116,14 +116,25 @@ const Products = ({ title, endPoint}) => {
   };
   useEffect(() => {
     setLoading(true);
+    const apiUrl = endPoint 
+      ? `${baseUrl}api/v1/${endPoint}`
+      : `${baseUrl}api/v1/products/best-selling`;
+    
     axios({
       method: 'GET',
-      url: `https://fakestoreapi.com/products`,
+      url: apiUrl,
     })
       .then((res) => {
-        setData(res.data);
+        // Handle different response structures
+        const responseData = res.data?.data || res.data || [];
+        setData(Array.isArray(responseData) ? responseData : []);
         setLoading(false);
       })
+      .catch((err) => {
+        console.error('Error fetching products:', err);
+        setData([]);
+        setLoading(false);
+      });
 
     return () => {};
   }, [setData, endPoint]);
