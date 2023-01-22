@@ -102,7 +102,7 @@ const Container = styled.div`
   width: 100%;
 `;
 const Products = ({ title, endPoint}) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   // const [visible, setVisible] = useState(5);
 
@@ -154,14 +154,15 @@ const Products = ({ title, endPoint}) => {
         <StyledArrowContainerLeft onClick={slideLeft}>
           <MdKeyboardArrowLeft />
         </StyledArrowContainerLeft>
-        {data ? (
+        {loading ? (
+          <Spinner />
+        ) : data && data.length > 0 ? (
           data.map((values) => {
-            return <Product product={values} key={values.id} />;
+            return <Product product={values} key={values.id || values._id} />;
           })
         ) : (
-          <Spinner />
+          <div>No Product Found</div>
         )}
-        { !loading &&<div>No Product Found</div>}
         <StyledArrowContainerRight onClick={slideRight}>
           <MdKeyboardArrowRight />
         </StyledArrowContainerRight>
