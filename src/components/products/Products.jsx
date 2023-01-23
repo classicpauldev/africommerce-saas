@@ -104,6 +104,7 @@ const Container = styled.div`
 const Products = ({ title, endPoint}) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
   // const [visible, setVisible] = useState(5);
 
   const slideLeft = (e) => {
@@ -128,10 +129,12 @@ const Products = ({ title, endPoint}) => {
         // Handle different response structures
         const responseData = res.data?.data || res.data || [];
         setData(Array.isArray(responseData) ? responseData : []);
+        setError(null);
         setLoading(false);
       })
       .catch((err) => {
         console.error('Error fetching products:', err);
+        setError(err.response?.data?.message || err.message || 'Failed to load products');
         setData([]);
         setLoading(false);
       });
@@ -156,12 +159,16 @@ const Products = ({ title, endPoint}) => {
         </StyledArrowContainerLeft>
         {loading ? (
           <Spinner />
+        ) : error ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
+            {error}
+          </div>
         ) : data && data.length > 0 ? (
           data.map((values) => {
             return <Product product={values} key={values.id || values._id} />;
           })
         ) : (
-          <div>No Product Found</div>
+          <div style={{ padding: '20px', textAlign: 'center' }}>No Product Found</div>
         )}
         <StyledArrowContainerRight onClick={slideRight}>
           <MdKeyboardArrowRight />
