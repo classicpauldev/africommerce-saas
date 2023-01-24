@@ -59,7 +59,7 @@ export const Home = () => {
       </ProductsContainer>
       <AdsSection />
       <ProductsContainer>
-        <Products title={'Best Sellers'} endPoint={'products/best-selling'} />
+        <Products title={'Best Sellers'} endPoint={'products/best-sellers'} />
       </ProductsContainer>
       <div>
         <div>Top 10 Categories</div>
