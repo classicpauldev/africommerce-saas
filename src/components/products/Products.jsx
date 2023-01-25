@@ -128,7 +128,19 @@ const Products = ({ title, endPoint}) => {
       .then((res) => {
         // Handle different response structures
         const responseData = res.data?.data || res.data || [];
-        setData(Array.isArray(responseData) ? responseData : []);
+        const products = Array.isArray(responseData) ? responseData : [];
+        
+        // Transform data to ensure consistent structure
+        const transformedProducts = products.map((product) => ({
+          id: product.id || product._id,
+          image: product.image || product.thumbnail || product.images?.[0] || '',
+          price: product.price || product.unit_price || 0,
+          description: product.description || product.name || product.title || '',
+          rating: product.rating || product.rating_count || 0,
+          ...product, // Keep all original properties
+        }));
+        
+        setData(transformedProducts);
         setError(null);
         setLoading(false);
       })
