@@ -101,6 +101,12 @@ const Container = styled.div`
   box-sizing: border-box;
   width: 100%;
 `;
+/**
+ * Products Component
+ * Displays a horizontal scrolling list of products
+ * @param {string} title - The title to display for the product section
+ * @param {string} endPoint - The API endpoint to fetch products from (relative to baseUrl/api/v1/)
+ */
 const Products = ({ title, endPoint}) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);

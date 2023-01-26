@@ -1,9 +1,18 @@
 import { baseUrl } from './api';
 
+/**
+ * Best Sellers API Adapter
+ * Handles API calls for best selling products
+ * Endpoint: /api/v1/products/best-sellers
+ */
 const BEST_SELLERS_ENDPOINT = `${baseUrl}api/v1/products/best-sellers`;
 
 export const bestSellersApi = {
-  // Get best selling products
+  /**
+   * Get best selling products
+   * @returns {Promise<Array>} Array of best selling products
+   * @throws {Error} If the API request fails
+   */
   getBestSellers: async () => {
     try {
       const response = await fetch(BEST_SELLERS_ENDPOINT, {
