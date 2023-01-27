@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
@@ -111,15 +111,17 @@ const Products = ({ title, endPoint}) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  // const [visible, setVisible] = useState(5);
+  const sliderRef = useRef(null);
 
-  const slideLeft = (e) => {
-    var slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft - 500;
+  const slideLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft = sliderRef.current.scrollLeft - 500;
+    }
   };
   const slideRight = () => {
-    var slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft + 500;
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft = sliderRef.current.scrollLeft + 500;
+    }
   };
   useEffect(() => {
     setLoading(true);
@@ -157,8 +159,10 @@ const Products = ({ title, endPoint}) => {
         setLoading(false);
       });
 
-    return () => {};
-  }, [setData, endPoint]);
+    return () => {
+      // Cleanup if needed
+    };
+  }, [endPoint]);
 
   return (
     <Container>
@@ -171,7 +175,7 @@ const Products = ({ title, endPoint}) => {
         </span>
         <button>View More</button>
       </Head>
-      <div id="slider">
+      <div ref={sliderRef} style={{ display: 'flex', overflowX: 'auto', gap: '10px', scrollBehavior: 'smooth' }}>
         <StyledArrowContainerLeft onClick={slideLeft}>
           <MdKeyboardArrowLeft />
         </StyledArrowContainerLeft>
