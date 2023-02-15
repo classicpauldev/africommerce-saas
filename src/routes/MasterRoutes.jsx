@@ -57,6 +57,7 @@ const SellerWholesaleProducts = lazy(() => import('../pages/seller/SellerWholesa
 const SellerAuctionOrders = lazy(() => import('../pages/seller/SellerAuctionOrders'));
 const SellerReceivedRefundRequest = lazy(() => import('../pages/seller/SellerReceivedRefundRequest'));
 const SellerPaymentHistory = lazy(() => import('../pages/seller/SellerPaymentHistory'));
+const SellerUsers = lazy(() => import('../pages/seller/SellerUsers').then(module => ({ default: module.SellerUsers })));
 const AffiliateSystem = lazy(() => import('../pages/user/affiliate/AffiliateSystem'));
 const WithdrawalHistory = lazy(() => import('../pages/user/affiliate/WithdrawalHistory'));
 const PaymentHistory = lazy(() => import('../pages/user/affiliate/PaymentHistory'));
@@ -127,6 +128,7 @@ export const MasterRoutes = () => {
           path="payment-history"
           element={<SellerPaymentHistory />}
         ></Route>
+        <Route path="users" element={<SellerUsers />}></Route>
       </Route>
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/flash-sale" element={<FlashSale />} />

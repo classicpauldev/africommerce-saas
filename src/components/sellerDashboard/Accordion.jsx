@@ -25,6 +25,7 @@ import {
   AiOutlineQuestionCircle,
   DiAtom,
 } from './SellerIcons';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
 export const MenuAccordion = () => {
   const [expanded, setExpanded] = useState('panel4');
@@ -374,6 +375,35 @@ export const MenuAccordion = () => {
                 }}
               >
                 Orders
+              </Link>
+            </Typography>
+          </AccordionSummary>
+        </Accordion>
+      </div>
+      {/*****Users */}
+      <div>
+        <Accordion
+          style={{ backgroundColor: 'inherit' }}
+          expanded={false}
+          elevation={0}
+        >
+          <AccordionSummary>
+            <p>
+              <PeopleAltOutlinedIcon
+                style={{ fontSize: '14px', marginTop: '2px' }}
+              />
+            </p>
+            <Typography component="p" variant="div">
+              <Link
+                to="/auth-seller/users"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  marginLeft: '4px',
+                  fontSize: '14px',
+                }}
+              >
+                Users
               </Link>
             </Typography>
           </AccordionSummary>
