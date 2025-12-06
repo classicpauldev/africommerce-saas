@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import Product from './Product';
 import Spinner from '../spinner/spinner';
+import { baseUrl } from '../../adapter/api';
 
 // styles
 const Head = styled.div`
@@ -100,32 +101,80 @@ const Container = styled.div`
   box-sizing: border-box;
   width: 100%;
 `;
+/**
+ * Products Component
+ * Displays a horizontal scrolling list of products
+ * @param {string} title - The title to display for the product section
+ * @param {string} endPoint - The API endpoint to fetch products from (relative to baseUrl/api/v1/)
+ */
 const Products = ({ title, endPoint}) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  // const [visible, setVisible] = useState(5);
+  const [error, setError] = useState(null);
+  const sliderRef = useRef(null);
 
-  const slideLeft = (e) => {
-    var slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft - 500;
+  const slideLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft = sliderRef.current.scrollLeft - 500;
+    }
   };
   const slideRight = () => {
-    var slider = document.getElementById('slider');
-    slider.scrollLeft = slider.scrollLeft + 500;
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft = sliderRef.current.scrollLeft + 500;
+    }
   };
   useEffect(() => {
     setLoading(true);
+    const apiUrl = endPoint 
+      ? `${baseUrl}api/v1/${endPoint}`
+      : `${baseUrl}api/v1/products/best-selling`;
+    
     axios({
       method: 'GET',
-      url: `https://fakestoreapi.com/products`,
+      url: apiUrl,
     })
       .then((res) => {
-        setData(res.data);
+        // Handle different response structures with optimized parsing
+        let responseData = res.data;
+        
+        // Normalize response structure
+        if (responseData?.data) {
+          responseData = responseData.data;
+        } else if (!Array.isArray(responseData)) {
+          responseData = [];
+        }
+        
+        const products = Array.isArray(responseData) ? responseData : [];
+        
+        // Transform data to ensure consistent structure (optimized)
+        const transformedProducts = products.map((product) => {
+          const transformed = {
+            id: product.id || product._id,
+            image: product.image || product.thumbnail || product.images?.[0] || '',
+            price: product.price || product.unit_price || 0,
+            description: product.description || product.name || product.title || '',
+            rating: product.rating || product.rating_count || 0,
+          };
+          
+          // Merge original properties efficiently
+          return { ...product, ...transformed };
+        });
+        
+        setData(transformedProducts);
+        setError(null);
         setLoading(false);
       })
+      .catch((err) => {
+        console.error('Error fetching products:', err);
+        setError(err.response?.data?.message || err.message || 'Failed to load products');
+        setData([]);
+        setLoading(false);
+      });
 
-    return () => {};
-  }, [setData, endPoint]);
+    return () => {
+      // Cleanup if needed
+    };
+  }, [endPoint]);
 
   return (
     <Container>
@@ -138,19 +187,41 @@ const Products = ({ title, endPoint}) => {
         </span>
         <button>View More</button>
       </Head>
-      <div id="slider">
-        <StyledArrowContainerLeft onClick={slideLeft}>
+      <div 
+        ref={sliderRef} 
+        style={{ display: 'flex', overflowX: 'auto', gap: '10px', scrollBehavior: 'smooth' }}
+        role="region"
+        aria-label={`${title} products carousel`}
+      >
+        <StyledArrowContainerLeft 
+          onClick={slideLeft}
+          aria-label="Scroll products left"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && slideLeft()}
+        >
           <MdKeyboardArrowLeft />
         </StyledArrowContainerLeft>
-        {data ? (
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
+            {error}
+          </div>
+        ) : data && data.length > 0 ? (
           data.map((values) => {
-            return <Product product={values} key={values.id} />;
+            return <Product product={values} key={values.id || values._id} />;
           })
         ) : (
-          <Spinner />
+          <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+            No products available at the moment
+          </div>
         )}
-        { !loading &&<div>No Product Found</div>}
-        <StyledArrowContainerRight onClick={slideRight}>
+        <StyledArrowContainerRight 
+          onClick={slideRight}
+          aria-label="Scroll products right"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && slideRight()}
+        >
           <MdKeyboardArrowRight />
         </StyledArrowContainerRight>
       </div>
