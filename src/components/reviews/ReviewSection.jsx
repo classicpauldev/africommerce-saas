@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Tabs, Tab, Divider } from '@mui/material';
+import { Box, Typography, Tabs, Tab } from '@mui/material';
 import { RateReview, List } from '@mui/icons-material';
 import styled from 'styled-components';
 import ReviewForm from './ReviewForm';
@@ -43,10 +43,6 @@ const ReviewSection = ({ productId, productName }) => {
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
-
-  const averageRating = reviews.length > 0 
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
-    : 0;
 
   return (
     <ReviewSectionContainer>
